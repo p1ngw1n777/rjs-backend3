@@ -7,7 +7,6 @@ const Category = sequelize.define("categories", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   category_name: { type: DataTypes.STRING, allowNull: false, },
   category_url_photo: { type: DataTypes.STRING, allowNull: true, },
-  category_parent: { type: DataTypes.INTEGER, allowNull: true, },
 }, 
   falseCreatedAt,
 );
@@ -31,8 +30,28 @@ const User = sequelize.define('users', {
   falseCreatedAt,
 )
 
+const Products = sequelize.define('products', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  product_name: { type: DataTypes.STRING, allowNull: false, unique: true, },
+  product_url_photo: { type: DataTypes.STRING, allowNull: false, },
+  price: { type: DataTypes.INTEGER, allowNull: false},
+  value: {type: DataTypes.INTEGER, allowNull: true},
+  count: {type: DataTypes.INTEGER, allowNull: true}
+},
+  falseCreatedAt,
+)
+
+Category.hasMany(Products);
+Products.belongsTo(Category);
+
+Category.hasMany(Category);
+Category.belongsTo(Category);
+
+
 module.exports = {
+  sequelize,
   Category,
   Review,
-  User
+  User,
+  Products,
 }

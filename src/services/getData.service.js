@@ -4,7 +4,7 @@ class categoriesService {
   async getData(req, res) {
     const categories = await Category.findAll(
         {
-            attributes: ['category_name', 'category_url_photo', 'category_parent'],
+            attributes: ['category_name', 'category_url_photo', 'categoryId'],
         }
     )
     const reviews = await Review.findAll(
