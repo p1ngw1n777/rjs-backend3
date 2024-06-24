@@ -4,15 +4,17 @@ const cors = require('cors')
 
 const app = express()
 const port = 3001
-
+app.use(cors());
 const sequelize = require('./db')
 const bodyParser = require('body-parser')
 
+
 // Включаем middleware CORS
-app.use(cors());
-app.use('/', router)
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
+app.use('/', router)
+
+
 app.listen(port, async () => {
   console.log(`server start on ${port}`)
 

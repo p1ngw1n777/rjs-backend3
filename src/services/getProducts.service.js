@@ -94,9 +94,10 @@ class categoriesService {
   }
 
   async getProduct(req, res, next) {
-    const a = JSON.stringify(req.body);
-      console.log('SUDA: ', a)
-      return a;
+    const a = req.body;
+    console.log('I post this: ',a)
+    res.json(a);
+
 //     const idCategory = req.body;
 
 //     const productsList = await Products.findAll(
