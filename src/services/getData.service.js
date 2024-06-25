@@ -1,15 +1,18 @@
 const { Category, Review } = require("../models/model");
+const { Op } = require('sequelize');
 
 class categoriesService {
   async getData(req, res) {
-    const categories = await Category.findAll(
-        {
-            attributes: ['category_name', 'category_url_photo', 'categoryId'],
-        }
-    )
     const reviews = await Review.findAll(
         {
             attributes: ['photo', 'name', 'surname', 'text', 'wphoto'],
+        }
+    )
+
+    const categories = await Category.findAll(
+        {
+            attributes: ['category_name', 'category_url_photo', 'categoryId'],
+            where: { categoryId: null }
         }
     )
     

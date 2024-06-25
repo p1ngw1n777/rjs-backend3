@@ -94,9 +94,21 @@ class categoriesService {
   }
 
   async getProduct(req, res, next) {
-    const a = req.body;
-    console.log('I post this: ',a)
-    res.json(a);
+    const idCategory = req.body.data;
+    console.log('Ты выбрал категорию с id = ', idCategory)
+
+    const productList = await Products.findAll(
+        {
+            include: {
+                model: Category,
+                where: { id: idCategory}
+            }
+        }
+    )
+
+    console.log(productList)
+
+    return res.json(idCategory);
 
 //     const idCategory = req.body;
 
