@@ -93,40 +93,66 @@ class categoriesService {
     return res.json({ dopOborudovanie: productsDopOborudovanie})
   }
 
+  //SELECT 'product_name', 'product_url_photo', 'price' FROM Product WHERE categoryId = id в таблице Category 
+  //(вообще тут должен быть скорее всего join inner, но я манал как их писать)
   async getProduct(req, res, next) {
-    const idCategory = req.body.data;
-    console.log('Ты выбрал категорию с id = ', idCategory)
+        const data = req.body.data;
+        
+        console.log('Ты выбрал категорию с id = ', data)
 
-    const productList = await Products.findAll(
-        {
-            attributes: [ 'product_name', 'product_url_photo', 'price' ],
+        // Извлекаем все id из объекта data
+        const idCategories = Object.values(data).filter(Boolean);
+
+        console.log('Ты выбрал категории с id = ', idCategories);
+
+        // Проверяем, является ли idCategories массивом
+        if (Array.isArray(idCategories) && idCategories.length > 0) {
+            // Если idCategories - массив, выполняем запрос для каждого элемента массива
+            const productList = await Promise.all(
+            idCategories.map(async (id) => {
+                return await Products.findAll({
+                attributes: ['product_name', 'product_url_photo', 'price'],
+                include: {
+                    model: Category,
+                    attributes: [],
+                    where: { id }
+                }
+                });
+            })
+            );
+
+            // Объединяем результаты в один массив
+            const flattenedProductList = productList.flat();
+
+            console.log(flattenedProductList);
+            return res.json(flattenedProductList);
+        } 
+        else {
+            // Если idCategory - одиночное значение, выполняем запрос как раньше
+            const productList = await Products.findAll({
+            attributes: ['product_name', 'product_url_photo', 'price'],
             include: {
                 model: Category,
                 attributes: [],
-                where: { id: idCategory}
+                where: { id: data }
             }
+            });
+
+                console.log(productList)
+
+                return res.json(productList);
         }
-    )
-
-    console.log(productList)
-
-    return res.json(productList);
-
-//     const idCategory = req.body;
-
-//     const productsList = await Products.findAll(
-//        {
-//             include: {
-//                 model: Category, 
-//                 where: { id: idCategory }
-//             }
-//        }
-//     ) 
-
-//     if(!productsList)
-//         return res.json({status_code: 'bad', msg: 'gg'})
-//     return res.json({productsList: productsList})
-    } 
+        /*const productList = await Products.findAll(
+                    {
+                        attributes: [ 'product_name', 'product_url_photo', 'price' ],
+                        include: {
+                            model: Category,
+                            attributes: [],
+                            where: { id: idCategory}
+                        }
+                    }
+                )*/
+    }
 }
 
 module.exports = new categoriesService()
