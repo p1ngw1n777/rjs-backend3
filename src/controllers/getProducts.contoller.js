@@ -12,7 +12,12 @@ router.get('/twizers', getProductsService.getTwizers)
 router.get('/consumables', getProductsService.getConsumables)
 router.get('/dop-oborudovanie', getProductsService.getDopOborudovanie)
 
-router.post('/glue', getProductsService.getProduct)
 router.post('/lashes', getProductsService.getProduct)
+router.post('/glue', getProductsService.getProduct)
+router.post('/preparations', getProductsService.getProduct)
+router.post('/twizers', getProductsService.getProduct)
+router.post('/consumables', getProductsService.getProduct)
+router.post('/dop-oborudovanie', getProductsService.getProduct)
+
 
 module.exports = router

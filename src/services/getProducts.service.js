@@ -99,8 +99,10 @@ class categoriesService {
 
     const productList = await Products.findAll(
         {
+            attributes: [ 'product_name', 'product_url_photo', 'price' ],
             include: {
                 model: Category,
+                attributes: [],
                 where: { id: idCategory}
             }
         }
@@ -108,7 +110,7 @@ class categoriesService {
 
     console.log(productList)
 
-    return res.json(idCategory);
+    return res.json(productList);
 
 //     const idCategory = req.body;
 
