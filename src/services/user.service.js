@@ -1,4 +1,4 @@
-const { User } = require("../models/model");
+const { User, Role } = require("../models/model");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require("../models/model");
@@ -26,8 +26,12 @@ class userService {
 	const { username, password } = req.body.data;
 
 	const user = await User.findOne({
-		attributes: ['login', 'password'],
-		where: { login: username }
+		attributes: ['login', 'password', 'roleId'],
+		where: { login: username },
+		include: {
+			model: Role,
+			attributes: [ 'role_name' ]
+		}
 	})
 
 	let comparePassword = bcrypt.compareSync(password,user.password);
