@@ -1,6 +1,16 @@
 const { User } = require("../models/model");
-
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 require("../models/model");
+
+const generateJwt = (id,email,role,user_role) => {
+    return jwt.sign(
+		{
+			id, email, role, user_role},
+        process.env.SECRET_KEY,
+        {expiresIn: '24h'}
+    )
+}  
 
 class userService {
   async login(req, res) {
@@ -20,78 +30,38 @@ class userService {
 		where: { login: username }
 	})
 
-	if(user != null && user.password === password) {
-		return res.json({ success: true, user })
-	}
-	else {
-		return res.json({ success: false, message: 'пользователь не найден' })
+	let comparePassword = bcrypt.compareSync(password,user.password);
+
+	if(!comparePassword){
+		return res.json({success: false, message: 'указан не верный пароль'})
 	}
 
-	return res.json({ success: false, message: 'пользователь не найден' })	
+	return res.json({ success: true, user })
   }
 
-  async getProduct(req, res, next) {
-	const data = req.body.data;
-	
-	console.log('Ты выбрал категорию с id = ', data)
-
-	// Извлекаем все id из объекта data
-	const idCategories = Object.values(data).filter(Boolean);
-
-	console.log('Ты выбрал категории с id = ', idCategories);
-
-	// Проверяем, является ли idCategories массивом
-	if (Array.isArray(idCategories) && idCategories.length > 0) {
-		// Если idCategories - массив, выполняем запрос для каждого элемента массива
-		const productList = await Promise.all(
-		idCategories.map(async (id) => {
-			return await Products.findAll({
-			attributes: ['product_name', 'product_url_photo', 'price'],
-			include: {
-				model: Category,
-				attributes: [],
-				where: { id }
-			}
-			});
-		})
-		);
-
-		// Объединяем результаты в один массив
-		const flattenedProductList = productList.flat();
-
-		console.log(flattenedProductList);
-		return res.json(flattenedProductList);
-	} 
-	else {
-		// Если idCategory - одиночное значение, выполняем запрос как раньше
-		const productList = await Products.findAll({
-		attributes: ['product_name', 'product_url_photo', 'price'],
-		include: {
-			model: Category,
-			attributes: [],
-			where: { id: data }
-		}
-		});
-
-			console.log(productList)
-
-			return res.json(productList);
-	}
-}
-
-  async registrationUser(data) {
+  async registrationUser(req, res, next) {
     try{
-        //console.log(data)
-        //console.log('/catalog/' + nameUrl)
-        const res = await instance.post('/catalog/' + nameUrl, { data });
-        console.log('api: ', res.data);
+        const { username, password } = req.body.data;
+
+		const candidate = await User.findOne( 
+			{ 
+				where: { login: username } 
+			});
+
+		if(candidate) {
+			return res.json({success: false, message: 'Такой пользователь уже зарегистрирован, попробуй другой login'})
+		}
+
+		const hashPassword = await bcrypt.hash(password, 5)
+
+		const user = await User.create({
+			login: username, password: hashPassword, 
+		})
+
+		return res.json({success: true, message: 'Учётная запись успешно зарегистрирована'})
         
-        if(!res){
-            console.log('Error 228')
-        }
-        return res.data;
     } catch(error) {
-        console.log('Ошибка при получении товаров c сервера: ', nameUrl, 'Ошибка: ', error)
+        console.log('Ошибка сервера сервера: ', error)
     }
   }
 }

@@ -41,12 +41,33 @@ const Products = sequelize.define('products', {
   falseCreatedAt,
 )
 
+const Role = sequelize.define('roles', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  role_name: { type: DataTypes.STRING, allowNull: false, unique: true, },
+},
+  falseCreatedAt,
+)
+
+const Transaction = sequelize.define('transaction', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  count: { type: DataTypes.INTEGER, allowNull: false },
+  type: { type: DataTypes.BOOLEAN, allowNull: false } ,
+  date: { type: DataTypes.DATE, allowNull:false, defaultValue: DataTypes.NOW }
+},
+  falseCreatedAt,
+)
+
 Category.hasMany(Products);
 Products.belongsTo(Category);
 
 Category.hasMany(Category);
 Category.belongsTo(Category);
 
+Role.hasMany(User);
+User.belongsTo(Role);
+
+User.hasMany(Transaction);
+Transaction.belongsTo(User);
 
 module.exports = {
   sequelize,
@@ -54,4 +75,6 @@ module.exports = {
   Review,
   User,
   Products,
+  Role, 
+  Transaction
 }
