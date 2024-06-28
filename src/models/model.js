@@ -26,7 +26,7 @@ const User = sequelize.define('users', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 	login: { type: DataTypes.STRING, allowNull: false, unique: true, },
 	password: { type: DataTypes.STRING, allowNull: false, },
-	email: { type: DataTypes.STRING, allowNull: false }
+	email: { type: DataTypes.STRING, allowNull: true }
 },
  falseCreatedAt,
 )
@@ -77,8 +77,8 @@ const Order = sequelize.define('order', {
 const WareHouse = sequelize.define('warehouse', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 	name: { type: DataTypes.STRING, allowNull: false,},
-	adress: { type: DataTypes.DATE, allowNull: false,  },
-	phoneNumber: { type: DataTypes.STRING, allowNull: false, }
+	adress: { type: DataTypes.STRING, allowNull: true,  },
+	phoneNumber: { type: DataTypes.STRING, allowNull: true, }
 },
  falseCreatedAt
 )
@@ -92,7 +92,7 @@ const StructureOrder = sequelize.define('structureOrder', {
 const Invoices = sequelize.define('invoices', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 	type: { type: DataTypes.BOOLEAN, allowNull: false},
-	date: { type: DataTypes.DATE, allowNull: false },
+	date: { type: DataTypes.DATE, allowNull:false, defaultValue: DataTypes.NOW }
 }, falseCreatedAt
 )
 
@@ -120,20 +120,20 @@ Order.belongsTo(DeliveryAdress)
 User.hasMany(Review)
 Review.belongsTo(User)
 
-Review.hasMany(Products)
-Products.belongsTo(Review)
+Products.hasMany(Review)
+Review.belongsTo(Products)
 
+StructureOrder.belongsTo(Products)
 Products.hasOne(StructureOrder)
-StructureOrder.hasOne(Products)
 
-StructureOrder.hasOne(Order)
+StructureOrder.belongsTo(Order)
 Order.hasOne(StructureOrder)
 
-Products.hasOne(Invoices)
-Invoices.hasOne(Products)
+Products.hasMany(Invoices)
+Invoices.belongsTo(Products)
 
-Invoices.hasOne(WareHouse)
-WareHouse.hasOne(Invoices)
+WareHouse.hasMany(Invoices)
+Invoices.belongsTo(WareHouse)
 
 module.exports = {
 	sequelize,
@@ -145,5 +145,6 @@ module.exports = {
 	Transaction,
 	DeliveryAdress,
 	Order,
-	WareHouse
+	WareHouse,
+	Invoices
 }

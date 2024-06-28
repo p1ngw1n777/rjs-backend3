@@ -7,6 +7,17 @@ const port = 3001
 app.use(cors());
 const sequelize = require('./db')
 const bodyParser = require('body-parser')
+const { 
+  seedCategories,
+  seedRoles,
+  seedUsers,
+  seedReviews,
+  seedTransactions,
+  seedProducts,
+  seedAddress,
+  seedWarehouses,
+  seedInvoices,
+} = require('./seeders/index.js')
 
 
 // Включаем middleware CORS
@@ -21,6 +32,16 @@ app.listen(port, async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
+    
+    await seedRoles();
+    await seedCategories();
+    await seedUsers();
+    await seedReviews();
+    await seedTransactions();
+    await seedProducts();
+    await seedAddress();
+    await seedWarehouses();
+    await seedInvoices();
 
   } catch (error) {
     console.error('unable to connect', error);
