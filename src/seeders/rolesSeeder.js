@@ -1,7 +1,8 @@
 const { Role } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedRoles() {
+    await sequelize.sync();
     const roleAdmin = await Role.create(
         { 
             role_name: 'admin'

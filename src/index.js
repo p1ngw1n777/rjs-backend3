@@ -25,14 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 app.use('/', router)
 
-
-app.listen(port, async () => {
-  console.log(`server start on ${port}`)
-
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    
+async function seedTables() {
     await seedRoles();
     await seedCategories();
     await seedUsers();
@@ -42,6 +35,15 @@ app.listen(port, async () => {
     await seedAddress();
     await seedWarehouses();
     await seedInvoices();
+}
+
+app.listen(port, async () => {
+  console.log(`server start on ${port}`)
+
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    await seedTables();
 
   } catch (error) {
     console.error('unable to connect', error);

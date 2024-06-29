@@ -1,10 +1,12 @@
 const { User, Transaction } = require('../models/model.js');
+const sequelize = require('../db.js')
 
 async function dateOfNow () {
     return current = new Date().getTime();;
 }
 
 async function seedTransactions() {
+    await sequelize.sync();
     const idUser = await User.findOne(
         {
             attributes: [ 'id', 'login'],

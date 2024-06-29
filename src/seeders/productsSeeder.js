@@ -1,8 +1,9 @@
 const { Products, Category } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedProducts() {
         /*ЧЕРНЫЕ*/
+    await sequelize.sync();   
     const categoryProductLashesBlack = await Category.findOne(
         {
             attributes: ['id', 'category_name'],

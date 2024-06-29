@@ -1,7 +1,8 @@
 const { DeliveryAdress, User } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedAddress() {
+    await sequelize.sync();
     const idUser = await User.findOne(
         {
             attributes: ['id', 'login'],

@@ -1,10 +1,12 @@
 const { Products, Invoices, WareHouse } = require('../models/model.js');
+const sequelize = require('../db.js')
 
 async function dateOfNow () {
     return current = new Date().getTime();;
 }
 
 async function seedInvoices() {
+    await sequelize.sync();
     const idWarehouse = await WareHouse.findOne(
         {
             attributes: ['id', 'name'],

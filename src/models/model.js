@@ -24,7 +24,8 @@ const Review = sequelize.define('reviews', {
 
 const User = sequelize.define('users', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-	login: { type: DataTypes.STRING, allowNull: false, unique: true, },
+	//login: { type: DataTypes.STRING, allowNull: false, unique: true, },
+	login: { type: DataTypes.STRING, allowNull: false, },
 	password: { type: DataTypes.STRING, allowNull: false, },
 	email: { type: DataTypes.STRING, allowNull: true }
 },

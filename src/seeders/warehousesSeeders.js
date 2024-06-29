@@ -1,7 +1,8 @@
 const { WareHouse } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedWarehouses() {
+    await sequelize.sync();
     const warehouse1 = await WareHouse.create(
         {
             name: 'Склад №1',

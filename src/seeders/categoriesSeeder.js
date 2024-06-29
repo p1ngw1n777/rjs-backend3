@@ -1,9 +1,10 @@
 const { Category } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedCategories() {
+    await sequelize.sync();
     const parentLashCategory = await Category.create(
-        { 
+        {        
             category_name: 'Ресницы', 
             category_url_photo: 'https://dominilash.ru/upload/iblock/b15/k7vskbaoz4cb1m6jolx0x04z4n2ekcij/Ellipse-1881.png' 
         });

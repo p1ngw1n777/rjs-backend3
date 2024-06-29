@@ -1,7 +1,8 @@
 const { User, Role } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedUsers() {
+    await sequelize.sync();
     const roleAdmin = await Role.findOne(
         {
             where: {

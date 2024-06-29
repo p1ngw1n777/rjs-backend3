@@ -1,7 +1,8 @@
 const { Review } = require('../models/model.js');
-
+const sequelize = require('../db.js')
 
 async function seedReviews() {
+    await sequelize.sync();
     const review1 = await Review.create(
         { 
             photo: 'https://dominilash.ru/upload/resize_cache/iblock/1bc/e7hnkvrpsew9v4l14di4zl8rywrrgje1/70_10000_0/islands_150-_1_.webp', 
