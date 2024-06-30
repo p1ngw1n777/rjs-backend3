@@ -68,6 +68,24 @@ class userService {
         console.log('Ошибка сервера сервера: ', error)
     }
   }
+
+  async allUser(req, res) {
+	try{
+		const user = await User.findAll({
+			include: {
+				model: Role,
+				attributes: [ 'role_name' ]
+			},
+			attributes: [ 'id', 'login', 'password', 'email',],	
+		});
+		if(!user) return res.json({status_code: "bad", msg: "user not exists"})
+	
+		return res.json(user)
+	}
+	catch(error) {
+		console.log(error)
+	}
+  }
 }
 
 module.exports = new userService()
