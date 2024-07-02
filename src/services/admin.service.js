@@ -1,4 +1,4 @@
-const { User, Transaction, DeliveryAdress, Review, Role, Products, Category, Order } = require("../models/model");
+const { User, Transaction, DeliveryAdress, Review, Role, Products, Category, Order, StructureOrder } = require("../models/model");
 require("../models/model");
 
 class adminService {
@@ -222,7 +222,7 @@ class adminService {
 				},
 				{
 					Header: "Категория",
-					accessor: 'category.login'
+					accessor: 'category.category_name'
 				},
 			]
 	
@@ -236,16 +236,21 @@ class adminService {
 	  async allOrder(req, res) {
 		try{
 			const product = await Order.findAll({
-				
-				include: {
-					model: User,
-					attributes: [ 'login' ]
-				},
-				include: {
-					model: DeliveryAdress,
-					attributes: [ 'adress' ]
-				},
-				attributes: [ 'id', 'statusOrder', 'owner', 'date'],	
+				include: [
+					{
+						model: User,
+						attributes: [ 'login' ]
+					},
+					{
+						model: DeliveryAdress,
+						attributes: [ 'adress' ]
+					},
+					{
+						model: StructureOrder,
+						attributes: [ 'products' ]
+					}
+				],
+				attributes: [ 'id', 'statusOrder', 'date'],		
 			});
 			if(!product) return res.json({status_code: "bad", msg: "user not exists"})
 		
@@ -264,12 +269,16 @@ class adminService {
 				},
 				{
 					Header: "Дата",
-					accessor: 'value'
+					accessor: 'date'
 				},
 				{
 					Header: "Адрес",
-					accessor: 'addressDeliveries.adress'
+					accessor: 'addressDelivery.adress'
 				},
+				{
+					Header: "Состав заказа",
+					accessor: 'structureOrder.products'
+				}
 			]
 	
 			return res.json({ columns: columns, users: product})

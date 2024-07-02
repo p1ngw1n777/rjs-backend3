@@ -69,8 +69,7 @@ const DeliveryAdress = sequelize.define('addressDelivery', {
 const Order = sequelize.define('order', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 	statusOrder: { type: DataTypes.STRING, allowNull: false },
-	owner: { type: DataTypes.STRING, allowNull: false, defaultValue: DataTypes.NOW },
-	date: { type: DataTypes.DATE, allowNull: false,  }
+	date: { type: DataTypes.DATE, allowNull: true, },
 }, 
  falseCreatedAt
 )
@@ -86,7 +85,7 @@ const WareHouse = sequelize.define('warehouse', {
 
 const StructureOrder = sequelize.define('structureOrder', {
 	id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-	date: { type: DataTypes.DATE, allowNull: false }
+	products: { type: DataTypes.JSON, allowNull: false },
 }, falseCreatedAt
 )
 
@@ -124,11 +123,8 @@ Review.belongsTo(User)
 Products.hasMany(Review)
 Review.belongsTo(Products)
 
-StructureOrder.belongsTo(Products)
-Products.hasOne(StructureOrder)
-
-StructureOrder.belongsTo(Order)
-Order.hasOne(StructureOrder)
+StructureOrder.hasOne(Order)
+Order.belongsTo(StructureOrder)
 
 Products.hasMany(Invoices)
 Invoices.belongsTo(Products)
@@ -147,5 +143,6 @@ module.exports = {
 	DeliveryAdress,
 	Order,
 	WareHouse,
-	Invoices
+	Invoices,
+	StructureOrder
 }
