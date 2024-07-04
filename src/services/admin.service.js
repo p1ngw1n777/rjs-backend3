@@ -2,6 +2,108 @@ const { User, Transaction, DeliveryAdress, Review, Role, Products, Category, Ord
 require("../models/model");
 
 class adminService {
+	async deteleData(req, res, next) {
+		try{
+			const {nameTable, idItem} = req.body.data;
+			console.log('nameTable: ', nameTable, 'idItem: ', idItem)
+			let user;
+			let column;
+			switch(nameTable){
+				case 'deleteUsers':
+					await User.destroy({
+						where: {
+							id: idItem
+						}
+					})
+
+					user = await User.findAll({
+						include: {
+							model: Role,
+							attributes: [ 'role_name' ]
+						},
+						attributes: [ 'id', 'login', 'password', 'email',],	
+					});
+
+					if(!user) return res.json({status_code: "bad", msg: "user not exists"})
+							
+					column = [ 
+						{ 
+							Header: '№', 
+							accessor: 'id'
+						},
+						{ 
+							Header: 'Имя пользователя',
+							accessor: 'login'
+						}, 
+						{
+							Header: 'Пароль',
+							accessor: 'password'
+						}, 
+						{ 
+							Header: 'Email', 
+							accessor: 'email'
+						},
+						{
+							Header: 'Роль',
+							accessor: 'role.role_name'
+						}
+					]
+					break;
+				case 'deleteOrders':
+					user = await Order.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				case 'deleteRoles':
+					user = await Role.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				case 'deleteTransactions':
+					user = await Order.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				case 'deleteDeliveryAddress':
+					user = await DeliveryAdress.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				case 'deleteReviews':
+					user = await Review.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				case 'deleteProducts':
+					user = await Products.destroy({
+						where: {
+							id: idItem
+						}
+					})
+					break;
+				default: 
+					console.log('error')
+					break;
+
+			}
+			if(!user) return res.json({status_code: "bad", msg: "user not exists"})
+			return res.json({ columns: column, users: user})
+		}
+		catch(error) {
+			console.log(error)
+		}
+	}
+	
 	async allUser(req, res) {
 		try{
 			const user = await User.findAll({

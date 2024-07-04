@@ -45,7 +45,7 @@ class userService {
 
   async registrationUser(req, res, next) {
     try{
-        const { username, password } = req.body.data;
+        const { username, password, email, roleId } = req.body.data;
 
 		const candidate = await User.findOne( 
 			{ 
@@ -59,7 +59,10 @@ class userService {
 		const hashPassword = await bcrypt.hash(password, 5)
 
 		const user = await User.create({
-			login: username, password: hashPassword, 
+			login: username, 
+			password: hashPassword, 
+			email: email, 
+			roleId: roleId
 		})
 
 		return res.json({success: true, message: 'Учётная запись успешно зарегистрирована'})
