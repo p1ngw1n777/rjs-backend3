@@ -23,12 +23,6 @@ async function seedRoles() {
         await Role.create(role);
         i++;
     }
-    
-    // for (const role of roles) {
-    //   await Role.create(role);
-    // }
-
-    
   }
 
 module.exports = { seedRoles };
