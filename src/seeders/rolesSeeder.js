@@ -3,6 +3,7 @@ const sequelize = require('../db.js')
 
 async function seedRoles() {
     await sequelize.sync();
+
     const roleAdmin = await Role.create(
         { 
             role_name: 'admin'
@@ -16,12 +17,17 @@ async function seedRoles() {
         roleAdmin,
         roleUser
     ];
-  
+
+    const rolesFromDB = Role.findAll()
+
     let role;
-    for (let i; i < roles.length; i++) {
-        role = roles[i];
-        await Role.create(role);
-        i++;
+
+    if(!rolesFromDB){
+        for (let i; i < roles.length; i++) {
+            role = roles[i];
+            await Role.create(role);
+            i++;
+        }
     }
   }
 

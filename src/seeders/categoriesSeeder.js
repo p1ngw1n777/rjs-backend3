@@ -11,7 +11,7 @@ async function seedCategories() {
     const parentGlueCategory = await Category.create(
         { 
             category_name: 'Клей', 
-            category_url_photo: 'https://dominilash.ru/upload/iblock/b15/k7vskbaoz4cb1m6jolx0x04z4n2ekcij/Ellipse-1881.png' 
+            category_url_photo: 'https://dominilash.ru/upload/iblock/10a/d993wprcus8wescxk1flu2bm0u7xjbp5/Ellipse-1883.png'
         });
 
     const parentPreparationCategory = await Category.create(
