@@ -1,5 +1,4 @@
 const { Category, Review } = require("../models/model");
-const { Op } = require('sequelize');
 
 class categoriesService {
   async getData(req, res) {
