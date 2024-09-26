@@ -2,8 +2,6 @@ const express = require('express')
 const router = require('./controllers/index.js')
 const cors = require('cors')
 
-//const corsMiddleWare = require('./middelware/cors.middeware.js')
-
 
 const app = express()
 const port = 3001
